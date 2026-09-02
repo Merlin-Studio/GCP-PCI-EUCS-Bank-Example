@@ -84,6 +84,21 @@ one spec, two clouds.
 
 ---
 
+## Build your own
+
+This bundle is one wizard session's output, not a hand-crafted repo. **You can
+generate a landing-zone artifact for your own requirements with Merlin Studio —
+[app.merlin-studio.cloud](https://app.merlin-studio.cloud/).** It is open: no
+signup, no email, guest mode starts immediately. Pick your own frameworks,
+regions and workloads and compare what fires against this example.
+
+### Further reading
+
+- [Compile-Time AI for GCP Landing Zones](https://medium.com/google-cloud/compile-time-ai-for-gcp-landing-zones-2555560fbd2f) — how the compile-time approach works: LLMs at design time, deterministic generation at run time.
+- [Setting Up a GCP Landing Zone for Organizations with Strict Regulatory Requirements](https://medium.com/google-cloud/setting-up-a-gcp-landing-zone-for-organizations-with-strict-regulatory-requirements-9054e0958b76) — the regulated-industry design decisions behind a foundation like this one.
+
+---
+
 ## 1. Organization Structure
 
 ### 1.1 Folder Hierarchy
