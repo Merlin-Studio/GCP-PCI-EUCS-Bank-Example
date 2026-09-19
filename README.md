@@ -553,7 +553,7 @@ These tokens ensure that cross-stage dependencies are resolved automatically by 
 
 | Role | Email |
 |------|-------|
-| Primary Contact | platform-team@acmebank.com |
+| Primary Contact | intentarcha@gmail.com |
 
 
 ---
