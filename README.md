@@ -94,6 +94,8 @@ generate a landing-zone artifact for your own requirements with Merlin Studio â€
 signup, no email, guest mode starts immediately. Pick your own frameworks,
 regions and workloads and compare what fires against this example.
 
+Merlin now also builds what runs on the landing zone: 25 workload archetypes, four of them shown end to end in [a complete example](https://github.com/Merlin-Studio/GCP-Terraform-Vertex-AI-RAG-GKE-Examples).
+
 ### Further reading
 
 - [Compile-Time AI for GCP Landing Zones](https://medium.com/google-cloud/compile-time-ai-for-gcp-landing-zones-2555560fbd2f) â€” how the compile-time approach works: LLMs at design time, deterministic generation at run time.
