@@ -21,7 +21,7 @@
 %% ============================================================================
 %% GCP LANDING ZONE ARCHITECTURE
 %% Organization: AcmeBank
-%% Generated: 2026-09-01T14:32:22.012870Z
+%% Generated: 2026-11-24T05:31:12.896324Z
 %% Profile: ADVANCED
 %% ============================================================================
 
@@ -67,7 +67,7 @@ graph TB
 
 
 
-        NET_vpc_prod["📦 vpc-prod subnets<br/>sb-prod-europe-west9: 10.1.0.0/20<br/>sb-prod-europe-west4: 10.129.0.0/20"]
+        NET_vpc_prod["📦 vpc-prod subnets<br/>sb-prod-europe-west9: 10.1.0.0/20<br/>sb-prod-europe-west4: 10.129.0.0/20<br/>sb-psc-prod-europe-west4: 10.60.0.0/24<br/>sb-psc-prod-europe-west9: 10.60.1.0/24"]
         NET --- NET_vpc_prod
 
 
@@ -76,8 +76,20 @@ graph TB
 
 
 
-        NET_vpc_dev["📦 vpc-dev subnets<br/>sb-dev-europe-west9: 10.2.0.0/20<br/>sb-dev-europe-west4: 10.130.0.0/20"]
+
+
+
+
+        NET_vpc_dev["📦 vpc-dev subnets<br/>sb-dev-europe-west9: 10.2.0.0/20<br/>sb-stg-europe-west9: 10.10.0.0/20<br/>sb-dev-europe-west4: 10.130.0.0/20<br/>sb-stg-europe-west4: 10.138.0.0/20<br/>sb-psc-dev-europe-west4: 10.60.2.0/24<br/>sb-psc-dev-europe-west9: 10.60.3.0/24"]
         NET --- NET_vpc_dev
+
+
+
+
+
+
+
+
 
 
 
@@ -284,6 +296,10 @@ graph TB
 
             VPC_vpc_prod_NODE --- SUB_sb_prod_europe_west4["📦 sb-prod-europe-west4<br/>10.129.0.0/20<br/><i>europe-west4</i>"]
 
+            VPC_vpc_prod_NODE --- SUB_sb_psc_prod_europe_west4["📦 sb-psc-prod-europe-west4<br/>10.60.0.0/24<br/><i>europe-west4</i>"]
+
+            VPC_vpc_prod_NODE --- SUB_sb_psc_prod_europe_west9["📦 sb-psc-prod-europe-west9<br/>10.60.1.0/24<br/><i>europe-west9</i>"]
+
         end
 
 
@@ -293,7 +309,15 @@ graph TB
 
             VPC_vpc_dev_NODE --- SUB_sb_dev_europe_west9["📦 sb-dev-europe-west9<br/>10.2.0.0/20<br/><i>europe-west9</i>"]
 
+            VPC_vpc_dev_NODE --- SUB_sb_stg_europe_west9["📦 sb-stg-europe-west9<br/>10.10.0.0/20<br/><i>europe-west9</i>"]
+
             VPC_vpc_dev_NODE --- SUB_sb_dev_europe_west4["📦 sb-dev-europe-west4<br/>10.130.0.0/20<br/><i>europe-west4</i>"]
+
+            VPC_vpc_dev_NODE --- SUB_sb_stg_europe_west4["📦 sb-stg-europe-west4<br/>10.138.0.0/20<br/><i>europe-west4</i>"]
+
+            VPC_vpc_dev_NODE --- SUB_sb_psc_dev_europe_west4["📦 sb-psc-dev-europe-west4<br/>10.60.2.0/24<br/><i>europe-west4</i>"]
+
+            VPC_vpc_dev_NODE --- SUB_sb_psc_dev_europe_west9["📦 sb-psc-dev-europe-west9<br/>10.60.3.0/24<br/><i>europe-west9</i>"]
 
         end
 

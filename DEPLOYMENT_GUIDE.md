@@ -63,18 +63,22 @@ Before you begin, ensure you have:
 Your zip contains these stage directories, each mapping to a FAST deployment stage:
 
 
-| Order | Stage Directory | FAST Stage | Purpose |
-|-------|-----------------|------------|---------|
+| Order | Bundle directory | FAST stage directory | Purpose |
+|-------|------------------|----------------------|---------|
 
-| 0 | `org-setup/` | `0-bootstrap` | Folders, IAM bindings, org policies, tags, billing |
+| 1 | `org-setup/` | `fast/stages/0-org-setup/` | Folders, IAM bindings, org policies, tags, billing, automation project |
 
-| 1 | `networking/` | `1-networking` | VPC networks, subnets, firewall rules, DNS, VPNs |
+| 2 | `vpcsc/` | `fast/stages/1-vpcsc/` | Service perimeter, access levels, ingress/egress policies |
 
-| 2 | `security/` | `2-security` | KMS keyrings, security projects, SCC |
+| 3 | `networking/` | `fast/stages/2-networking/` | Shared VPC host project, VPC networks, subnets, firewall rules, DNS, VPNs |
 
-| 3 | `project-factory/` | `3-project-factory` | Workload projects (GKE, data, apps, compute, ops) |
+| 4 | `security/` | `fast/stages/2-security/` | KMS keyrings, security projects, SCC |
 
-| 4 | `vpcsc/` | `4-vpcsc` | Service perimeters, access levels, ingress/egress policies |
+| 5 | `project-factory/` | `fast/stages/2-project-factory/` | Workload projects (GKE, data, apps, compute, ops) and budgets |
+
+| 6 | `2-security-edge/` | `fast/stages/2-security-edge/` | Web application firewall policies from the Security page, created in every project that can host a backend service, and the one Binary Authorization policy and attestor of each application project. Run fast-links.sh in the new directory first: 0-org-setup wrote its provider file |
+
+| 7 | `2-networking-endpoints/` | `fast/stages/2-networking-endpoints/` | Private Service Connect endpoints and private DNS for the Model Armor regional API, in every workload network and region Model Armor serves. Needs only 2-networking; run fast-links.sh in the new directory first |
 
 
 
@@ -95,16 +99,14 @@ Plus documentation files at the root:
 ```bash
 git clone https://github.com/GoogleCloudPlatform/cloud-foundation-fabric.git
 cd cloud-foundation-fabric
+git checkout v60.0.0
 ```
 
-Pin to a tested release (recommended):
-
-```bash
-git checkout <RELEASE_TAG>
-```
-
-Check the [releases page](https://github.com/GoogleCloudPlatform/cloud-foundation-fabric/releases)
-for the latest stable tag.
+These data files were generated for Fabric **v60.0.0**:
+they follow that release's stage layout (`0-org-setup`, `1-vpcsc`, `2-networking`, `2-security`,
+`2-project-factory`) and validate against its JSON schemas. Newer releases may rename keys;
+check the [releases page](https://github.com/GoogleCloudPlatform/cloud-foundation-fabric/releases)
+and the stage `UPGRADING.md` notes before moving to a later tag.
 
 ---
 
@@ -115,68 +117,94 @@ files consumed by subsequent stages.
 
 
 
-### Stage 0: Organization Setup (`org-setup/`)
+### Stage 1: Organization Setup (`org-setup/` → `fast/stages/0-org-setup/`)
 
-Folders, IAM bindings, org policies, tags, billing.
+Folders, IAM bindings, org policies, tags, billing, automation project.
 
-**Copy generated data files:**
+**Copy generated data files** (the stage reads `datasets/classic` by default):
 
 ```bash
-# From your extracted zip directory:
-cp -r org-setup/* fast/stages/0-bootstrap/data/
+# From your extracted zip directory, inside the Fabric checkout:
+cp -r org-setup/* fast/stages/0-org-setup/
 ```
 
 **Deploy:**
 
 ```bash
-cd fast/stages/0-bootstrap
+cd fast/stages/0-org-setup
 terraform init
 terraform plan -out=tfplan
 # Review the plan carefully, then apply:
 terraform apply tfplan
-cd ../..
+cd ../../..
 ```
 
 
-> **Important:** After the bootstrap stage completes, it creates a GCS bucket for
-> Terraform state and outputs provider/backend configuration files. Copy these
-> output files into subsequent stage directories as documented in FAST's
-> [bootstrap README](https://github.com/GoogleCloudPlatform/cloud-foundation-fabric/tree/master/fast/stages/0-bootstrap).
+> **Important:** stage 0 creates the state buckets and the stage service accounts, and
+> writes the provider/backend files for every later stage into the `iac-outputs` bucket
+> (see `output_files.providers` in `defaults.yaml`). Fetch them with FAST's
+> `fast-links.sh` helper before running the next stage, as documented in the
+> [0-org-setup README](https://github.com/GoogleCloudPlatform/cloud-foundation-fabric/tree/v60.0.0/fast/stages/0-org-setup).
+> Before applying, replace any placeholder in `global:` (organization id, billing account).
 
 
-### Stage 1: Networking (`networking/`)
+### Stage 2: VPC Service Controls (`vpcsc/` → `fast/stages/1-vpcsc/`)
 
-VPC networks, subnets, firewall rules, DNS, VPNs.
+Service perimeter, access levels, ingress/egress policies.
 
-**Copy generated data files:**
+**Copy generated data files** (the stage reads `datasets/classic` by default):
 
 ```bash
-# From your extracted zip directory:
-cp -r networking/* fast/stages/1-networking/data/
+# From your extracted zip directory, inside the Fabric checkout:
+cp -r vpcsc/* fast/stages/1-vpcsc/
 ```
 
 **Deploy:**
 
 ```bash
-cd fast/stages/1-networking
+cd fast/stages/1-vpcsc
 terraform init
 terraform plan -out=tfplan
 # Review the plan carefully, then apply:
 terraform apply tfplan
-cd ../..
+cd ../../..
 ```
 
 
 
-### Stage 2: Security (`security/`)
+### Stage 3: Networking (`networking/` → `fast/stages/2-networking/`)
+
+Shared VPC host project, VPC networks, subnets, firewall rules, DNS, VPNs.
+
+**Copy generated data files** (the stage reads `datasets/classic` by default):
+
+```bash
+# From your extracted zip directory, inside the Fabric checkout:
+cp -r networking/* fast/stages/2-networking/
+```
+
+**Deploy:**
+
+```bash
+cd fast/stages/2-networking
+terraform init
+terraform plan -out=tfplan
+# Review the plan carefully, then apply:
+terraform apply tfplan
+cd ../../..
+```
+
+
+
+### Stage 4: Security (`security/` → `fast/stages/2-security/`)
 
 KMS keyrings, security projects, SCC.
 
-**Copy generated data files:**
+**Copy generated data files** (the stage reads `datasets/classic` by default):
 
 ```bash
-# From your extracted zip directory:
-cp -r security/* fast/stages/2-security/data/
+# From your extracted zip directory, inside the Fabric checkout:
+cp -r security/* fast/stages/2-security/
 ```
 
 **Deploy:**
@@ -187,55 +215,79 @@ terraform init
 terraform plan -out=tfplan
 # Review the plan carefully, then apply:
 terraform apply tfplan
-cd ../..
+cd ../../..
 ```
 
 
 
-### Stage 3: Project Factory (`project-factory/`)
+### Stage 5: Project Factory (`project-factory/` → `fast/stages/2-project-factory/`)
 
-Workload projects (GKE, data, apps, compute, ops).
+Workload projects (GKE, data, apps, compute, ops) and budgets.
 
-**Copy generated data files:**
-
-```bash
-# From your extracted zip directory:
-cp -r project-factory/* fast/stages/3-project-factory/data/
-```
-
-**Deploy:**
+**Copy generated data files** (the stage reads `datasets/classic` by default):
 
 ```bash
-cd fast/stages/3-project-factory
-terraform init
-terraform plan -out=tfplan
-# Review the plan carefully, then apply:
-terraform apply tfplan
-cd ../..
-```
-
-
-
-### Stage 4: VPC Service Controls (`vpcsc/`)
-
-Service perimeters, access levels, ingress/egress policies.
-
-**Copy generated data files:**
-
-```bash
-# From your extracted zip directory:
-cp -r vpcsc/* fast/stages/4-vpcsc/data/
+# From your extracted zip directory, inside the Fabric checkout:
+cp -r project-factory/* fast/stages/2-project-factory/
 ```
 
 **Deploy:**
 
 ```bash
-cd fast/stages/4-vpcsc
+cd fast/stages/2-project-factory
 terraform init
 terraform plan -out=tfplan
 # Review the plan carefully, then apply:
 terraform apply tfplan
-cd ../..
+cd ../../..
+```
+
+
+
+### Stage 6: Security Edge (Cloud Armor, Binary Authorization) (`2-security-edge/` → `fast/stages/2-security-edge/`)
+
+Web application firewall policies from the Security page, created in every project that can host a backend service, and the one Binary Authorization policy and attestor of each application project. Run fast-links.sh in the new directory first: 0-org-setup wrote its provider file.
+
+**Copy generated data files** (the stage reads `datasets/classic` by default):
+
+```bash
+# From your extracted zip directory, inside the Fabric checkout:
+cp -r 2-security-edge/* fast/stages/2-security-edge/
+```
+
+**Deploy:**
+
+```bash
+cd fast/stages/2-security-edge
+terraform init
+terraform plan -out=tfplan
+# Review the plan carefully, then apply:
+terraform apply tfplan
+cd ../../..
+```
+
+
+
+### Stage 7: Networking Endpoints (Private Service Connect) (`2-networking-endpoints/` → `fast/stages/2-networking-endpoints/`)
+
+Private Service Connect endpoints and private DNS for the Model Armor regional API, in every workload network and region Model Armor serves. Needs only 2-networking; run fast-links.sh in the new directory first.
+
+**Copy generated data files** (the stage reads `datasets/classic` by default):
+
+```bash
+# From your extracted zip directory, inside the Fabric checkout:
+cp -r 2-networking-endpoints/* fast/stages/2-networking-endpoints/
+```
+
+**Deploy:**
+
+```bash
+cd fast/stages/2-networking-endpoints
+terraform init
+terraform plan -out=tfplan
+# Review the plan carefully, then apply:
+terraform apply tfplan
+cd ../../..
 ```
 
 

@@ -11,7 +11,7 @@ This is a reference configuration for a GCP Landing Zone foundation for acmebank
 
 # acmebank - Configuration Documentation
 
-> **Generated:** 2026-09-01T14:32:22.012870Z
+> **Generated:** 2026-11-24T05:31:12.896324Z
 > **Profile:** Advanced
 > **Organization:** acmebank.com
 
@@ -71,14 +71,14 @@ finished by your team.
 
 | # | Control | What fired | Where it landed |
 |---|---------|------------|-----------------|
-| 1 | ✅/📋 PCI scope segmentation | PCI DSS scoping — each workload isolated as one project per environment, all enclosed in a VPC Service Controls perimeter with restricted services derived from actual API enablement; a dedicated CDE folder is the documented next hardening step | [`vpcsc/datasets/default/perimeters/main.yaml`](vpcsc/datasets/default/perimeters/main.yaml), [`project-factory/projects/`](project-factory/projects) |
-| 2 | ✅ EU region lock | GDPR Art. 44–49 + EUCS data sovereignty → `gcp.resourceLocations` allow-list `in:eu-locations`, enforced at the organization, plus a Frankfurt interconnect facility | [`org-setup/.../org-policies/gcp.resourcelocations.yaml`](org-setup/datasets/main/organization/org-policies/gcp.resourcelocations.yaml) |
+| 1 | ✅/📋 PCI scope segmentation | PCI DSS scoping — each workload isolated as one project per environment, all enclosed in a VPC Service Controls perimeter with restricted services derived from actual API enablement; a dedicated CDE folder is the documented next hardening step | [`vpcsc/datasets/classic/perimeters/main.yaml`](vpcsc/datasets/classic/perimeters/main.yaml), [`project-factory/datasets/classic/projects/`](project-factory/datasets/classic/projects) |
+| 2 | ✅ EU region lock | GDPR Art. 44–49 + EUCS data sovereignty → `gcp.resourceLocations` allow-list `in:eu-locations`, enforced at the organization, plus a Frankfurt interconnect facility | [`org-setup/.../org-policies/gcp.yaml`](org-setup/datasets/classic/organization/org-policies/gcp.yaml) |
 | 3 | ✅/📋 CMEK for every data service | PCI Req 3 + EUCS CRY-01/02 + GDPR Art. 32(1)(a) → one CMEK key per service, wired into every workload project; CIS GCP 1.10 → 90-day rotation (the strictest framework wins). Ships at SOFTWARE protection with an ARCHITECT TODO to raise to HSM | [`security/.../keyrings/kr-europe-west9.yaml`](security/datasets/classic/keyrings/kr-europe-west9.yaml), [`CMEK_WIRING.md`](CMEK_WIRING.md) |
 | 4 | ✅/📋 Centralized egress | Advanced profile → hub-and-spoke with default internet routes deleted everywhere and Cloud NAT only in the hub, so all egress converges there; an inline inspection appliance (NGFW/IDS) is left to the network team | [`networking/datasets/hub-and-spokes-peerings/`](networking/datasets/hub-and-spokes-peerings) |
 | 5 | ✅ Immutable long-retention audit logs | PCI Req 10 + EUCS logging → 10-year (3650-day) retention with a **locked** `audit-logs` bucket, Data Access audit logs on, and three aggregated org sinks | §6 below (Logging & Monitoring) |
-| 6 | ✅ DLP for cardholder data | PCI DSS Req 3 → PAN inspection template deployed with the security dataset | [`security/.../dlp/inspect-templates/pci-cardholder-detection.yaml`](security/datasets/classic/dlp/inspect-templates/pci-cardholder-detection.yaml) |
-| 7 | ✅/📋 MFA + privileged access | ISO 27001 A.5.15 + PCI Req 8 → groups-based IAM (six admin groups, no per-user grants), key access scoped per keyring, service-account key creation denied org-wide; MFA and just-in-time elevation are enforced in Cloud Identity (IdP-side, documented) | [`org-setup/datasets/main/defaults.yaml`](org-setup/datasets/main/defaults.yaml), §2 below |
-| 8 | ✅ Dual-region resilience | Warm-standby DR (EUCS availability + PCI continuity) → every VPC gets europe-west4 subnets at a +128 CIDR offset and the DR region carries a full replica keyring | [`networking/.../vpc-prod/subnets/europe-west4.yaml`](networking/datasets/hub-and-spokes-peerings/vpcs/vpc-prod/subnets/europe-west4.yaml), [`security/.../keyrings/kr-europe-west4.yaml`](security/datasets/classic/keyrings/kr-europe-west4.yaml) |
+| 6 | ✅ DLP for cardholder data | PCI DSS Req 3 → PAN inspection template, shipped beside the security stage (FAST has no DLP factory) | [`security/extras/dlp/inspect-templates/pci-cardholder-detection.yaml`](security/extras/dlp/inspect-templates/pci-cardholder-detection.yaml) |
+| 7 | ✅/📋 MFA + privileged access | ISO 27001 A.5.15 + PCI Req 8 → groups-based IAM (six admin groups, no per-user grants), key access scoped per keyring, service-account key creation denied org-wide; MFA and just-in-time elevation are enforced in Cloud Identity (IdP-side, documented) | [`org-setup/datasets/classic/defaults.yaml`](org-setup/datasets/classic/defaults.yaml), §2 below |
+| 8 | ✅ Dual-region resilience | Warm-standby DR (EUCS availability + PCI continuity) → every VPC gets europe-west4 subnets at a +128 CIDR offset and the DR region carries a full replica keyring | [`networking/.../vpc-prod/subnets/sb-prod-europe-west4.yaml`](networking/datasets/hub-and-spokes-peerings/vpcs/vpc-prod/subnets/sb-prod-europe-west4.yaml), [`security/.../keyrings/kr-europe-west4.yaml`](security/datasets/classic/keyrings/kr-europe-west4.yaml) |
 
 The AWS port of this same bank profile is
 [`AWS-PCI-EUCS-Bank-Example`](https://github.com/Merlin-Studio/AWS-PCI-EUCS-Bank-Example) —
@@ -255,11 +255,23 @@ Configured environments: **Development, Staging, Production**
 
 | `sb-dev-europe-west9` | vpc-dev | europe-west9 | `10.2.0.0/20` | Yes |
 
+| `sb-stg-europe-west9` | vpc-dev | europe-west9 | `10.10.0.0/20` | Yes |
+
 | `sb-hub-europe-west4` | vpc-hub | europe-west4 | `10.128.0.0/20` | Yes |
 
 | `sb-prod-europe-west4` | vpc-prod | europe-west4 | `10.129.0.0/20` | Yes |
 
 | `sb-dev-europe-west4` | vpc-dev | europe-west4 | `10.130.0.0/20` | Yes |
+
+| `sb-stg-europe-west4` | vpc-dev | europe-west4 | `10.138.0.0/20` | Yes |
+
+| `sb-psc-prod-europe-west4` | vpc-prod | europe-west4 | `10.60.0.0/24` | No |
+
+| `sb-psc-prod-europe-west9` | vpc-prod | europe-west9 | `10.60.1.0/24` | No |
+
+| `sb-psc-dev-europe-west4` | vpc-dev | europe-west4 | `10.60.2.0/24` | No |
+
+| `sb-psc-dev-europe-west9` | vpc-dev | europe-west9 | `10.60.3.0/24` | No |
 
 
 
@@ -271,7 +283,7 @@ Configured environments: **Development, Staging, Production**
 
 | Attribute | Value |
 |-----------|-------|
-| Connectivity Type | Partner Interconnect |
+| Connectivity Type | Partner Interconnect (declared, not generated: the FAST output builds Cloud VPN only; build this link yourself) |
 
 | VPN Type | HA VPN |
 | Routing | Dynamic |
@@ -395,6 +407,18 @@ Configured environments: **Development, Staging, Production**
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 ## 7. Backup & Disaster Recovery
 
 ### 7.1 What the landing zone provides
@@ -402,7 +426,7 @@ Configured environments: **Development, Staging, Production**
 | Aspect | Value |
 |---|---|
 | DR Region | `europe-west4` |
-| DR-region subnets | sb-hub-europe-west4, sb-prod-europe-west4, sb-dev-europe-west4 |
+| DR-region subnets | sb-hub-europe-west4, sb-prod-europe-west4, sb-dev-europe-west4, sb-stg-europe-west4, sb-psc-prod-europe-west4, sb-psc-dev-europe-west4 |
 | DR-region KMS keyring | `kr-europe-west4` (per-service CMEK keys) |
 | Audit log retention | 10 years (3650 days) |
 
@@ -443,24 +467,31 @@ This wizard generated **FAST factory YAML data files** — structured configurat
 | Output Format | FAST Factory YAML |
 | Framework | Cloud Foundation Fabric (FAST) |
 
-| Stages Generated | 5 |
+| Fabric release | `v60.0.0` (the data files follow this release's stage layout and schemas) |
+
+
+| Stages Generated | 7 |
 
 
 
 ### FAST Stages Overview
 
-| Stage | Directory | Description |
-|-------|-----------|-------------|
+| Order | Stage | Bundle directory | FAST stage | Description |
+|-------|-------|------------------|------------|-------------|
 
-| Organization Setup | `org-setup/` | Folders, IAM bindings, org policies, tags, billing |
+| 1 | Organization Setup | `org-setup/` | `fast/stages/0-org-setup/` | Folders, IAM bindings, org policies, tags, billing, automation project |
 
-| Networking | `networking/` | VPC networks, subnets, firewall rules, DNS, VPNs |
+| 2 | VPC Service Controls | `vpcsc/` | `fast/stages/1-vpcsc/` | Service perimeter, access levels, ingress/egress policies |
 
-| Security | `security/` | KMS keyrings, security projects, SCC |
+| 3 | Networking | `networking/` | `fast/stages/2-networking/` | Shared VPC host project, VPC networks, subnets, firewall rules, DNS, VPNs |
 
-| Project Factory | `project-factory/` | Workload projects (GKE, data, apps, compute, ops) |
+| 4 | Security | `security/` | `fast/stages/2-security/` | KMS keyrings, security projects, SCC |
 
-| VPC Service Controls | `vpcsc/` | Service perimeters, access levels, ingress/egress policies |
+| 5 | Project Factory | `project-factory/` | `fast/stages/2-project-factory/` | Workload projects (GKE, data, apps, compute, ops) and budgets |
+
+| 6 | Security Edge (Cloud Armor, Binary Authorization) | `2-security-edge/` | `fast/stages/2-security-edge/` | Web application firewall policies from the Security page, created in every project that can host a backend service, and the one Binary Authorization policy and attestor of each application project. Run fast-links.sh in the new directory first: 0-org-setup wrote its provider file |
+
+| 7 | Networking Endpoints (Private Service Connect) | `2-networking-endpoints/` | `fast/stages/2-networking-endpoints/` | Private Service Connect endpoints and private DNS for the Model Armor regional API, in every workload network and region Model Armor serves. Needs only 2-networking; run fast-links.sh in the new directory first |
 
 
 
@@ -475,39 +506,49 @@ This wizard generated **FAST factory YAML data files** — structured configurat
 
 #### Deployment Steps
 
-1. **Clone FAST Fabric** (if not already done):
+1. **Clone Cloud Foundation Fabric at the pinned release** (if not already done):
    ```bash
    git clone https://github.com/GoogleCloudPlatform/cloud-foundation-fabric.git
-   cd cloud-foundation-fabric/fast
+   cd cloud-foundation-fabric
+   git checkout v60.0.0
    ```
 
-2. **Place the generated data files** into the corresponding FAST stage directories:
+2. **Place the generated data files** into the corresponding FAST stage directories
+   (each stage reads its `datasets/classic` dataset by default):
 
 
-   - Copy `org-setup/` contents into the FAST `org-setup/` stage data directory
+   - Copy the contents of `org-setup/` into `fast/stages/0-org-setup/`
 
-   - Copy `networking/` contents into the FAST `networking/` stage data directory
+   - Copy the contents of `vpcsc/` into `fast/stages/1-vpcsc/`
 
-   - Copy `security/` contents into the FAST `security/` stage data directory
+   - Copy the contents of `networking/` into `fast/stages/2-networking/`
 
-   - Copy `project-factory/` contents into the FAST `project-factory/` stage data directory
+   - Copy the contents of `security/` into `fast/stages/2-security/`
 
-   - Copy `vpcsc/` contents into the FAST `vpcsc/` stage data directory
+   - Copy the contents of `project-factory/` into `fast/stages/2-project-factory/`
+
+   - Copy the contents of `2-security-edge/` into `fast/stages/2-security-edge/`
+
+   - Copy the contents of `2-networking-endpoints/` into `fast/stages/2-networking-endpoints/`
 
 
 
 3. **Deploy stages in order**:
 
 
-   - **Stage 0**: Organization Setup (`org-setup/`)
+   - **1. Organization Setup** — `fast/stages/0-org-setup/`
 
-   - **Stage 1**: Networking (`networking/`)
+   - **2. VPC Service Controls** — `fast/stages/1-vpcsc/`
 
-   - **Stage 2**: Security (`security/`)
+   - **3. Networking** — `fast/stages/2-networking/`
 
-   - **Stage 3**: Project Factory (`project-factory/`)
+   - **4. Security** — `fast/stages/2-security/`
 
-   - **Stage 4**: VPC Service Controls (`vpcsc/`)
+   - **5. Project Factory** — `fast/stages/2-project-factory/`
+
+   - **6. Security Edge (Cloud Armor, Binary Authorization)** — `fast/stages/2-security-edge/`
+
+   - **7. Networking Endpoints (Private Service Connect)** — `fast/stages/2-networking-endpoints/`
 
 
 

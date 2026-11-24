@@ -47,7 +47,7 @@
       "status": "PASS",
       "score_impact": 0,
       "weight": 15,
-      "explanation": "3 subnet(s) configured in DR region europe-west4."
+      "explanation": "6 subnet(s) configured in DR region europe-west4."
     },
     {
       "category": "GKE",
