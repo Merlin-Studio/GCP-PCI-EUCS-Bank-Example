@@ -29,9 +29,11 @@ iam_by_principals:
   - roles/logging.admin
   - roles/orgpolicy.policyAdmin
   - roles/resourcemanager.folderAdmin
-  - roles/resourcemanager.organizationViewer
+  - roles/resourcemanager.organizationAdmin
   - roles/resourcemanager.projectCreator
+  - roles/resourcemanager.projectMover
   - roles/resourcemanager.tagAdmin
+  - roles/resourcemanager.tagUser
   $iam_principals:service_accounts/iac-0/iac-org-ro:
   - roles/accesscontextmanager.policyReader
   - roles/cloudasset.viewer
@@ -42,6 +44,12 @@ iam_by_principals:
   - roles/resourcemanager.folderViewer
   - roles/resourcemanager.organizationViewer
   - roles/resourcemanager.tagViewer
+  $iam_principals:service_accounts/iac-0/iac-vpcsc-rw:
+  - roles/accesscontextmanager.policyAdmin
+  - roles/cloudasset.viewer
+  $iam_principals:service_accounts/iac-0/iac-vpcsc-ro:
+  - roles/accesscontextmanager.policyReader
+  - roles/cloudasset.viewer
   $iam_principals:gcp-billing-admins:
   - roles/billing.admin
   $iam_principals:gcp-network-admins:
@@ -79,13 +87,16 @@ logging:
   storage_location: $locations:primary
   sinks:
     org-audit-sink:
-      destination: bigquery.googleapis.com/projects/$project_ids:log-0/datasets/org-audit-sink
+      type: bigquery
+      destination: projects/acmebank-log-0/datasets/org_audit_sink
       filter: logName:"cloudaudit.googleapis.com"
     org-security-sink:
-      destination: pubsub.googleapis.com/projects/$project_ids:log-0/topics/org-security-sink
+      type: pubsub
+      destination: $pubsub_topics:log-0/org-security-sink
       filter: severity>=WARNING
     org-archive-sink:
-      destination: storage.googleapis.com/$storage_buckets:log-0/org-archive-sink
+      type: storage
+      destination: $storage_buckets:log-0/org-archive-sink
 data_access_logs:
   sts.googleapis.com:
     ADMIN_READ: {}

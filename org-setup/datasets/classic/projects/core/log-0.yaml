@@ -12,3 +12,20 @@ services:
 - logging.googleapis.com
 - pubsub.googleapis.com
 - storage.googleapis.com
+log_buckets:
+  audit-logs:
+    retention: 3650
+    locked: true
+  security-logs:
+    retention: 365
+    locked: true
+datasets:
+  org_audit_sink:
+    location: europe-west9
+pubsub_topics:
+  org-security-sink: {}
+buckets:
+  org-archive-sink:
+    location: europe-west9
+    uniform_bucket_level_access: true
+    public_access_prevention: enforced

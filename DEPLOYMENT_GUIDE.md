@@ -121,12 +121,19 @@ files consumed by subsequent stages.
 
 Folders, IAM bindings, org policies, tags, billing, automation project.
 
-**Copy generated data files** (the stage reads `datasets/classic` by default):
+
+**Replace the stage's dataset with the generated one.** A Fabric checkout ships
+Google's sample data in the same folder; copying over it merges the two, and the
+sample folders, projects and policies would be deployed beside yours.
 
 ```bash
 # From your extracted zip directory, inside the Fabric checkout:
-cp -r org-setup/* fast/stages/0-org-setup/
+for d in org-setup/datasets/*/; do
+  rm -rf "fast/stages/0-org-setup/datasets/$(basename "$d")"
+  cp -r "$d" "fast/stages/0-org-setup/datasets/"
+done
 ```
+
 
 **Deploy:**
 
@@ -152,12 +159,19 @@ cd ../../..
 
 Service perimeter, access levels, ingress/egress policies.
 
-**Copy generated data files** (the stage reads `datasets/classic` by default):
+
+**Replace the stage's dataset with the generated one.** A Fabric checkout ships
+Google's sample data in the same folder; copying over it merges the two, and the
+sample folders, projects and policies would be deployed beside yours.
 
 ```bash
 # From your extracted zip directory, inside the Fabric checkout:
-cp -r vpcsc/* fast/stages/1-vpcsc/
+for d in vpcsc/datasets/*/; do
+  rm -rf "fast/stages/1-vpcsc/datasets/$(basename "$d")"
+  cp -r "$d" "fast/stages/1-vpcsc/datasets/"
+done
 ```
+
 
 **Deploy:**
 
@@ -176,12 +190,19 @@ cd ../../..
 
 Shared VPC host project, VPC networks, subnets, firewall rules, DNS, VPNs.
 
-**Copy generated data files** (the stage reads `datasets/classic` by default):
+
+**Replace the stage's dataset with the generated one.** A Fabric checkout ships
+Google's sample data in the same folder; copying over it merges the two, and the
+sample folders, projects and policies would be deployed beside yours.
 
 ```bash
 # From your extracted zip directory, inside the Fabric checkout:
-cp -r networking/* fast/stages/2-networking/
+for d in networking/datasets/*/; do
+  rm -rf "fast/stages/2-networking/datasets/$(basename "$d")"
+  cp -r "$d" "fast/stages/2-networking/datasets/"
+done
 ```
+
 
 **Deploy:**
 
@@ -200,12 +221,19 @@ cd ../../..
 
 KMS keyrings, security projects, SCC.
 
-**Copy generated data files** (the stage reads `datasets/classic` by default):
+
+**Replace the stage's dataset with the generated one.** A Fabric checkout ships
+Google's sample data in the same folder; copying over it merges the two, and the
+sample folders, projects and policies would be deployed beside yours.
 
 ```bash
 # From your extracted zip directory, inside the Fabric checkout:
-cp -r security/* fast/stages/2-security/
+for d in security/datasets/*/; do
+  rm -rf "fast/stages/2-security/datasets/$(basename "$d")"
+  cp -r "$d" "fast/stages/2-security/datasets/"
+done
 ```
+
 
 **Deploy:**
 
@@ -224,12 +252,19 @@ cd ../../..
 
 Workload projects (GKE, data, apps, compute, ops) and budgets.
 
-**Copy generated data files** (the stage reads `datasets/classic` by default):
+
+**Replace the stage's dataset with the generated one.** A Fabric checkout ships
+Google's sample data in the same folder; copying over it merges the two, and the
+sample folders, projects and policies would be deployed beside yours.
 
 ```bash
 # From your extracted zip directory, inside the Fabric checkout:
-cp -r project-factory/* fast/stages/2-project-factory/
+for d in project-factory/datasets/*/; do
+  rm -rf "fast/stages/2-project-factory/datasets/$(basename "$d")"
+  cp -r "$d" "fast/stages/2-project-factory/datasets/"
+done
 ```
+
 
 **Deploy:**
 
@@ -248,12 +283,14 @@ cd ../../..
 
 Web application firewall policies from the Security page, created in every project that can host a backend service, and the one Binary Authorization policy and attestor of each application project. Run fast-links.sh in the new directory first: 0-org-setup wrote its provider file.
 
-**Copy generated data files** (the stage reads `datasets/classic` by default):
+
+**Copy the stage** (a complete stage directory, not FAST data):
 
 ```bash
 # From your extracted zip directory, inside the Fabric checkout:
-cp -r 2-security-edge/* fast/stages/2-security-edge/
+cp -r 2-security-edge fast/stages/2-security-edge
 ```
+
 
 **Deploy:**
 
@@ -272,12 +309,14 @@ cd ../../..
 
 Private Service Connect endpoints and private DNS for the Model Armor regional API, in every workload network and region Model Armor serves. Needs only 2-networking; run fast-links.sh in the new directory first.
 
-**Copy generated data files** (the stage reads `datasets/classic` by default):
+
+**Copy the stage** (a complete stage directory, not FAST data):
 
 ```bash
 # From your extracted zip directory, inside the Fabric checkout:
-cp -r 2-networking-endpoints/* fast/stages/2-networking-endpoints/
+cp -r 2-networking-endpoints fast/stages/2-networking-endpoints
 ```
+
 
 **Deploy:**
 

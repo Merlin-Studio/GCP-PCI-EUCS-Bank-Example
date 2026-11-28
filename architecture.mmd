@@ -21,7 +21,7 @@
 %% ============================================================================
 %% GCP LANDING ZONE ARCHITECTURE
 %% Organization: AcmeBank
-%% Generated: 2026-11-24T05:31:12.896324Z
+%% Generated: 2026-11-28T05:06:44.701182Z
 %% Profile: ADVANCED
 %% ============================================================================
 
@@ -743,7 +743,6 @@ graph TB
         direction TB
         AL_corp_network["corp-network"]
         AL_fast_automation["fast-automation"]
-        AL_admin_identity["admin-identity"]
     end
 
     subgraph PERIM_main["🔒 Main Perimeter (dry-run mode)"]
@@ -756,7 +755,6 @@ graph TB
 
     %% Connections
     VPCSC_INTERNET -.->|"❌ blocked"| RESTRICTED
-    AL_admin_identity -->|"✅ ingress"| WORKLOADS
     AL_fast_automation -->|"✅ ingress"| WORKLOADS
     RESTRICTED -->|"📤 egress: artifactregistry"| VPCSC_INTERNET
     RESTRICTED -->|"📤 egress: logging"| VPCSC_INTERNET

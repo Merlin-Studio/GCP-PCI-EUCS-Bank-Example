@@ -17,11 +17,6 @@ from:
   - $iam_principals:service_accounts/iac-0/iac-networking-rw
   - $iam_principals:service_accounts/iac-0/iac-security-rw
   - $iam_principals:service_accounts/iac-0/iac-pf-rw
-  - $iam_principals:service_accounts/iac-0/terraform-org-sa
-  - $iam_principals:service_accounts/iac-0/terraform-network-sa
-  - $iam_principals:service_accounts/iac-0/terraform-security-sa
-  - $iam_principals:service_accounts/iac-0/cicd-deploy-sa
-  - $iam_principals:service_accounts/iac-0/security-scanner-sa
 to:
   operations:
   - service_name: '*'

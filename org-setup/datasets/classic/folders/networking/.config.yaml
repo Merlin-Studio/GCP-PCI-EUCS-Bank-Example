@@ -17,3 +17,12 @@ iam_by_principals:
   - roles/compute.networkUser
   $iam_principals:service_accounts/iac-0/iac-pf-ro:
   - roles/compute.viewer
+iam_bindings:
+  project_factory:
+    role: roles/resourcemanager.projectIamAdmin
+    members:
+    - $iam_principals:service_accounts/iac-0/iac-pf-rw
+    condition:
+      title: Project factory delegated IAM grant.
+      expression: api.getAttribute('iam.googleapis.com/modifiedGrantsByRole', []).hasOnly(['roles/compute.networkUser', 'roles/composer.sharedVpcAgent',
+        'roles/container.hostServiceAgentUser', 'roles/vpcaccess.user'])

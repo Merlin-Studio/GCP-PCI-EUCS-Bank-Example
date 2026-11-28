@@ -21,7 +21,7 @@ labels:
   workload: application
   environment: stg
 iam_by_principals:
-  $iam_principals:service_accounts/iac-0/iac-app-stg-rw:
+  $iam_principals:iac-0/iac-app-stg-rw:
   - roles/aiplatform.admin
   - roles/cloudfunctions.admin
   - roles/cloudscheduler.admin
@@ -39,7 +39,7 @@ iam_by_principals:
   - roles/serviceusage.serviceUsageAdmin
   - roles/serviceusage.serviceUsageConsumer
   - roles/storage.admin
-  $iam_principals:service_accounts/iac-0/iac-app-stg-ro:
+  $iam_principals:iac-0/iac-app-stg-ro:
   - roles/aiplatform.viewer
   - roles/cloudfunctions.viewer
   - roles/cloudscheduler.viewer
@@ -50,16 +50,16 @@ iam_by_principals:
   - roles/run.viewer
   - roles/secretmanager.viewer
   - roles/viewer
-  $iam_principals:service_accounts/iac-0/iac-app-delivery-rw:
+  $iam_principals:iac-0/iac-app-delivery-rw:
   - roles/browser
-  $iam_principals:service_accounts/iac-0/iac-app-delivery-ro:
+  $iam_principals:iac-0/iac-app-delivery-ro:
   - roles/browser
-  $iam_principals:service_accounts/iac-0/iac-security-rw:
+  $iam_principals:iac-0/iac-security-rw:
   - roles/binaryauthorization.attestorsAdmin
   - roles/binaryauthorization.policyEditor
   - roles/compute.securityAdmin
   - roles/containeranalysis.notes.editor
-  $iam_principals:service_accounts/iac-0/iac-security-ro:
+  $iam_principals:iac-0/iac-security-ro:
   - roles/binaryauthorization.attestorsViewer
   - roles/binaryauthorization.policyViewer
   - roles/compute.viewer
@@ -68,24 +68,24 @@ shared_vpc_service_config:
   host_project: $project_ids:net-core-0
   service_agent_subnet_iam:
     europe-west4/sb-stg-europe-west4:
-    - $service_agents:cloudservices
-    - $service_agents:cloudrun
+    - cloudservices
+    - cloudrun
     europe-west9/sb-stg-europe-west9:
-    - $service_agents:cloudservices
-    - $service_agents:cloudrun
+    - cloudservices
+    - cloudrun
   service_agent_iam:
     roles/vpcaccess.user:
     - $service_agents:cloudfunctions
     - $service_agents:cloudrun
   network_subnet_users:
     europe-west4/sb-stg-europe-west4:
-    - $iam_principals:service_accounts/iac-0/iac-app-stg-rw
-    - $iam_principals:service_accounts/iac-0/iac-app-delivery-rw
-    - $iam_principals:service_accounts/iac-0/iac-security-rw
+    - $iam_principals:iac-0/iac-app-stg-rw
+    - $iam_principals:iac-0/iac-app-delivery-rw
+    - $iam_principals:iac-0/iac-security-rw
     europe-west9/sb-stg-europe-west9:
-    - $iam_principals:service_accounts/iac-0/iac-app-stg-rw
-    - $iam_principals:service_accounts/iac-0/iac-app-delivery-rw
-    - $iam_principals:service_accounts/iac-0/iac-security-rw
+    - $iam_principals:iac-0/iac-app-stg-rw
+    - $iam_principals:iac-0/iac-app-delivery-rw
+    - $iam_principals:iac-0/iac-security-rw
 billing_budgets:
 - organization-budget
 service_encryption_key_ids:

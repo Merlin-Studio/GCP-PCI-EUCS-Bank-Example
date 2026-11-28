@@ -17,7 +17,7 @@ labels:
   workload: application
   environment: shared
 iam_by_principals:
-  $iam_principals:service_accounts/iac-0/iac-app-delivery-rw:
+  $iam_principals:iac-0/iac-app-delivery-rw:
   - roles/artifactregistry.admin
   - roles/cloudbuild.workerPoolOwner
   - roles/clouddeploy.admin
@@ -25,14 +25,14 @@ iam_by_principals:
   - roles/iam.serviceAccountUser
   - roles/resourcemanager.projectIamAdmin
   - roles/serviceusage.serviceUsageAdmin
-  $iam_principals:service_accounts/iac-0/iac-app-delivery-ro:
+  $iam_principals:iac-0/iac-app-delivery-ro:
   - roles/cloudbuild.workerPoolViewer
   - roles/clouddeploy.viewer
   - roles/viewer
-  $iam_principals:service_accounts/iac-0/iac-ar-rw:
+  $iam_principals:iac-0/iac-ar-rw:
   - roles/artifactregistry.admin
   - roles/serviceusage.serviceUsageConsumer
-  $iam_principals:service_accounts/iac-0/iac-ar-ro:
+  $iam_principals:iac-0/iac-ar-ro:
   - roles/artifactregistry.reader
   - roles/viewer
 shared_vpc_service_config:

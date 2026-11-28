@@ -11,6 +11,7 @@
 parent: $folder_ids:production
 services:
 - bigquery.googleapis.com
+- compute.googleapis.com
 - dataflow.googleapis.com
 - pubsub.googleapis.com
 - sqladmin.googleapis.com
@@ -20,16 +21,16 @@ labels:
   workload: data-platform
   environment: prd
 iam_by_principals:
-  $iam_principals:service_accounts/iac-0/iac-dp-prd-rw:
+  $iam_principals:iac-0/iac-dp-prd-rw:
   - roles/bigquery.admin
   - roles/iam.serviceAccountAdmin
   - roles/pubsub.admin
   - roles/resourcemanager.projectIamAdmin
   - roles/serviceusage.serviceUsageAdmin
   - roles/storage.admin
-  $iam_principals:service_accounts/iac-0/iac-dp-prd-ro:
+  $iam_principals:iac-0/iac-dp-prd-ro:
   - roles/viewer
-  $iam_principals:service_accounts/iac-0/iac-app-prd-rw:
+  $iam_principals:iac-0/iac-app-prd-rw:
   - roles/aiplatform.admin
   - roles/bigquery.admin
   - roles/bigtable.admin
@@ -50,7 +51,7 @@ iam_by_principals:
   - roles/spanner.admin
   - roles/storage.admin
   - roles/storagetransfer.admin
-  $iam_principals:service_accounts/iac-0/iac-app-prd-ro:
+  $iam_principals:iac-0/iac-app-prd-ro:
   - roles/aiplatform.viewer
   - roles/bigquery.dataViewer
   - roles/bigtable.viewer
@@ -69,16 +70,16 @@ shared_vpc_service_config:
   host_project: $project_ids:net-core-0
   service_agent_subnet_iam:
     europe-west4/sb-prod-europe-west4:
-    - $service_agents:dataflow
+    - dataflow
     europe-west9/sb-prod-europe-west9:
-    - $service_agents:dataflow
+    - dataflow
   network_subnet_users:
     europe-west4/sb-prod-europe-west4:
-    - $iam_principals:service_accounts/iac-0/iac-dp-prd-rw
-    - $iam_principals:service_accounts/iac-0/iac-app-prd-rw
+    - $iam_principals:iac-0/iac-dp-prd-rw
+    - $iam_principals:iac-0/iac-app-prd-rw
     europe-west9/sb-prod-europe-west9:
-    - $iam_principals:service_accounts/iac-0/iac-dp-prd-rw
-    - $iam_principals:service_accounts/iac-0/iac-app-prd-rw
+    - $iam_principals:iac-0/iac-dp-prd-rw
+    - $iam_principals:iac-0/iac-app-prd-rw
 billing_budgets:
 - organization-budget
 service_encryption_key_ids:

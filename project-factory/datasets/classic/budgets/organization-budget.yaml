@@ -10,3 +10,4 @@ threshold_rules:
 - percent: 1.0
 - percent: 1.0
   forecasted_spend: true
+filter: {}

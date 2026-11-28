@@ -33,7 +33,6 @@ spec:
   access_levels:
   - $access_levels:corp-network
   - $access_levels:fast-automation
-  - $access_levels:admin-identity
   resources:
   - $resource_sets:discovered_projects
   restricted_services:

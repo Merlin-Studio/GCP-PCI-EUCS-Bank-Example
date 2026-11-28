@@ -13,7 +13,7 @@ This is a reference configuration for a GCP Landing Zone foundation for acmebank
 
 # acmebank - Configuration Documentation
 
-> **Generated:** 2026-11-24T05:31:12.896324Z
+> **Generated:** 2026-11-28T05:06:44.701182Z
 > **Profile:** Advanced
 > **Organization:** acmebank.com
 
@@ -498,23 +498,24 @@ This wizard generated **FAST factory YAML data files** — structured configurat
    git checkout v60.0.0
    ```
 
-2. **Place the generated data files** into the corresponding FAST stage directories
-   (each stage reads its `datasets/classic` dataset by default):
+2. **Place the generated data files** into the corresponding FAST stage directories.
+   Each `datasets/<name>/` folder **replaces** the folder of the same name in the
+   stage: Fabric ships sample data there, and copying over it would deploy both.
 
 
-   - Copy the contents of `org-setup/` into `fast/stages/0-org-setup/`
+   - Replace `fast/stages/0-org-setup/datasets/<name>/` with each `org-setup/datasets/<name>/`
 
-   - Copy the contents of `vpcsc/` into `fast/stages/1-vpcsc/`
+   - Replace `fast/stages/1-vpcsc/datasets/<name>/` with each `vpcsc/datasets/<name>/`
 
-   - Copy the contents of `networking/` into `fast/stages/2-networking/`
+   - Replace `fast/stages/2-networking/datasets/<name>/` with each `networking/datasets/<name>/`
 
-   - Copy the contents of `security/` into `fast/stages/2-security/`
+   - Replace `fast/stages/2-security/datasets/<name>/` with each `security/datasets/<name>/`
 
-   - Copy the contents of `project-factory/` into `fast/stages/2-project-factory/`
+   - Replace `fast/stages/2-project-factory/datasets/<name>/` with each `project-factory/datasets/<name>/`
 
-   - Copy the contents of `2-security-edge/` into `fast/stages/2-security-edge/`
+   - Copy `2-security-edge/` to `fast/stages/2-security-edge/` (a complete stage)
 
-   - Copy the contents of `2-networking-endpoints/` into `fast/stages/2-networking-endpoints/`
+   - Copy `2-networking-endpoints/` to `fast/stages/2-networking-endpoints/` (a complete stage)
 
 
 

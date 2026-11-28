@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "generated_by": "merlin",
-  "generated_at": "2026-11-24T05:31:34Z",
+  "generated_at": "2026-11-28T05:07:05Z",
   "fabric_version": "v60.0.0",
   "spec_fingerprint": "1d1bd6658f47880a3e37d1c527f3616173e4d5c747707971c3acba2a2abfddd2",
   "task_id": "gcp-pci-eucs-bank-example",

@@ -14,9 +14,9 @@ from:
   access_levels:
   - $access_levels:corp-network
   identities:
-  - $iam_principals:gcp-org-admin
-  - $iam_principals:gcp-network-admin
-  - $iam_principals:gcp-security-admin
+  - $iam_principals:gcp-organization-admins
+  - $iam_principals:gcp-network-admins
+  - $iam_principals:gcp-security-admins
 to:
   operations:
   - service_name: compute.googleapis.com
